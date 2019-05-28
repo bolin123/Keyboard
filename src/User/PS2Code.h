@@ -4,7 +4,7 @@
 USB:https://blog.csdn.net/u013771867/article/details/51465193
 PS2:https://blog.csdn.net/hochy2008/article/details/5791065
 */
-const unsigned char g_NormalKey[][2] = {
+const unsigned short g_NormalKey[][2] = {
     {0x1c, 0x04}, //a
     {0x32, 0x05}, //b
     {0x21, 0x06}, //c
@@ -71,14 +71,49 @@ const unsigned char g_NormalKey[][2] = {
     {0x78, 0x44}, // F11
     {0x07, 0x45}, // F12
     {0x7E, 0x47}, //Scroll
+    {0xE070, 0x49}, //Insert1 
+    {0xE06C, 0x4A}, //Home
+    {0xE07D, 0x4B}, //PageUp 
+    {0xE071, 0x4C}, //Delete Forward
+    {0xE069, 0x4D}, //End 
+    {0xE07A, 0x4E}, //PageDown 
+    {0xE074, 0x4F}, //RightArrow 
+    {0xE06B, 0x50}, //LeftArrow 
+    {0xE072, 0x51}, //DownArrow 
+    {0xE075, 0x52}, //UpArrow 
+    {0x77, 0x53},   //Num Lock
+    {0xE04A, 0x54}, //KP /
+    {0x7C, 0x55},   //KP *
+    {0x7B, 0x56},   //KP -
+    {0x79, 0x57},   //KP +
+    {0xE05A, 0x58}, //KP EN
+    {0x69, 0x59}, //KP 1
+    {0x72, 0x5a}, //KP 2
+    {0x7A, 0x5b}, //KP 3
+    {0x6b, 0x5c}, //KP 4
+    {0x73, 0x5d}, //KP 5
+    {0x74, 0x5e}, //KP 6
+    {0x6c, 0x5f}, //KP 7
+    {0x75, 0x60}, //KP 8
+    {0x7d, 0x61}, //KP 9
+    {0x70, 0x62}, //KP 0
+    {0x71, 0x63}, //KP .
 };
 
-const unsigned char g_SpecialKey[][2] ={
+/*
+BYTE1 -- 特殊按键
+	|--bit0: Left Control是否按下，按下为1  
+	|--bit1: Left Shift  是否按下，按下为1  
+	|--bit2: Left Alt  是否按下，按下为1  
+	|--bit3: Left GUI（Windows键） 是否按下，按下为1  
+	|--bit4: Right Control是否按下，按下为1 
+	|--bit5: Right Shift 是否按下，按下为1  
+	|--bit6: Right Alt 是否按下，按下为1  
+	|--bit7: Right GUI 是否按下，按下为1 
 
-};
-
-const unsigned char g_CtrlKey[8] = {
-    
+*/
+const unsigned short g_CtrlKey[8] = {
+    0x14, 0x12, 0x11, 0xE01F, 0xE014, 0x59, 0xE011, 0xE027
 };
 
 
