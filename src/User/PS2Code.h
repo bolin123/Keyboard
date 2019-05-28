@@ -4,7 +4,7 @@
 USB:https://blog.csdn.net/u013771867/article/details/51465193
 PS2:https://blog.csdn.net/hochy2008/article/details/5791065
 */
-const unsigned char NormalKey[][2] = {
+const unsigned char g_NormalKey[][2] = {
     {0x1c, 0x04}, //a
     {0x32, 0x05}, //b
     {0x21, 0x06}, //c
@@ -72,5 +72,14 @@ const unsigned char NormalKey[][2] = {
     {0x07, 0x45}, // F12
     {0x7E, 0x47}, //Scroll
 };
+
+const unsigned char g_SpecialKey[][2] ={
+
+};
+
+const unsigned char g_CtrlKey[8] = {
+    
+};
+
 
 #endif
