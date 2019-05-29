@@ -1,4 +1,5 @@
 #include "PS2.h"
+#include "PS2Code.h"
 #include "HalWait.h"
 #include "VTStaticQueue.h"
 #include "stm32f4xx_exti.h"
@@ -137,14 +138,93 @@ static void ps2BitSend(uint8_t byte)
 	ps2RecvModeSet(true);
 }
 
+
+static void usbKeyHandle(bool ctrlKey, bool pushed, uint8_t value)
+{
+    if(value != 0xff)
+    {
+        printf("U:%02x %d [%d]\n", value, pushed, ctrlKey);
+    }
+}
+
+static uint8_t ps2CtrlKey2UsbBitnum(uint16_t ps2Key)
+{
+    uint8_t i;
+
+    for(i = 0; i < 8; i++)
+    {
+        if(ps2Key == g_CtrlKey[i])
+        {
+            return i;
+        }
+    }
+    return 0xff;
+}
+
+static uint8_t ps2Key2Usbkey(uint16_t ps2Key)
+{
+    uint16_t i;
+
+    for(i = 0; i < (sizeof(g_NormalKey) / 4); i++)
+    {
+        if(ps2Key == g_NormalKey[i][0])
+        {
+            return (uint8_t)g_NormalKey[i][1];
+        }
+    }
+
+    return 0xff;
+}
+
 static void keyValueHandle(void)
 {
-	uint8_t key;
+    bool pushed = true;
+    bool isCtrlKey = false;
+	uint8_t value;
+    uint16_t ps2key;
+    uint8_t usbKey = 0;
+    static bool gotE0 = false;
+    static bool gotF0 = false;
 	while(VTSQueueCount(valueBuff))
 	{
-		key = VTSQueueFront(valueBuff);
+		value = VTSQueueFront(valueBuff);
 		VTSQueuePop(valueBuff);
-		printf("%02x ", key);
+		printf("%02x ", value);
+        if(value == 0xE0)
+        {
+            gotE0 = true;
+        }
+        else if(value == 0xF0)
+        {
+            gotF0 = true;
+        }
+        else
+        {
+            ps2key = value;
+            if(gotE0)
+            {
+               ps2key += 0xE000;
+            }
+
+            usbKey = ps2CtrlKey2UsbBitnum(ps2key);
+            if(usbKey == 0xff)
+            {
+                isCtrlKey = false;
+                usbKey = ps2Key2Usbkey(ps2key);
+            }
+            else
+            {
+                isCtrlKey = true;
+            }
+
+            if(gotF0)
+            {
+                pushed = false;
+            }
+            usbKeyHandle(isCtrlKey, pushed, usbKey);
+            gotF0 = false;
+            gotE0 = false;
+        }
 	}
 }
 
