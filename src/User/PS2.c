@@ -5,8 +5,8 @@
 #include "stm32f4xx_exti.h"
 #include "stm32f4xx_gpio.h"
 
-#define PS2_CLK_PIN 0x12
-#define PS2_DIO_PIN 0x11
+#define PS2_CLK_PIN 0x0c
+#define PS2_DIO_PIN 0x0b
 
 typedef struct
 {

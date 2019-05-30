@@ -138,7 +138,7 @@
           </Flash1>
           <bUseTDR>1</bUseTDR>
           <Flash2>BIN\UL2CM3.DLL</Flash2>
-          <Flash3>"" ()</Flash3>
+          <Flash3></Flash3>
           <Flash4></Flash4>
           <pFcarmOut></pFcarmOut>
           <pFcarmGrp></pFcarmGrp>
@@ -183,7 +183,7 @@
             <hadIRAM>1</hadIRAM>
             <hadXRAM>0</hadXRAM>
             <uocXRam>0</uocXRam>
-            <RvdsVP>1</RvdsVP>
+            <RvdsVP>2</RvdsVP>
             <hadIRAM2>1</hadIRAM2>
             <hadIROM2>0</hadIROM2>
             <StupSel>8</StupSel>
@@ -335,9 +335,9 @@
             <v6Rtti>0</v6Rtti>
             <VariousControls>
               <MiscControls></MiscControls>
-              <Define>STM32F40_41xxx,USE_STDPERIPH_DRIVER</Define>
+              <Define>STM32F40_41xxx,USE_STDPERIPH_DRIVER,ARM_MATH_CM4,__CC_ARM,ARM_MATH_MATRIX_CHECK,ARM_MATH_ROUNDING</Define>
               <Undefine></Undefine>
-              <IncludePath>..\src\FWLIB\inc;..\src\Hal;..\src\System\Sys;..\src\User;..\src\CORE</IncludePath>
+              <IncludePath>..\src\FWLIB\inc;..\src\Hal;..\src\System\Sys;..\src\User;..\src\CORE;..\src\M8266WIFI</IncludePath>
             </VariousControls>
           </Cads>
           <Aads>
@@ -456,6 +456,16 @@
               <FileType>1</FileType>
               <FilePath>..\src\FWLIB\src\stm32f4xx_syscfg.c</FilePath>
             </File>
+            <File>
+              <FileName>stm32f4xx_spi.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\src\FWLIB\src\stm32f4xx_spi.c</FilePath>
+            </File>
+            <File>
+              <FileName>stm32f4xx_fsmc.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\src\FWLIB\src\stm32f4xx_fsmc.c</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>
@@ -465,6 +475,11 @@
               <FileName>System.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\src\System\Sys\System.c</FilePath>
+            </File>
+            <File>
+              <FileName>SysTimer.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\src\System\Sys\SysTimer.c</FilePath>
             </File>
           </Files>
         </Group>
@@ -481,6 +496,21 @@
               <FileType>1</FileType>
               <FilePath>..\src\User\PS2.c</FilePath>
             </File>
+            <File>
+              <FileName>Demo.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\src\User\Demo.c</FilePath>
+            </File>
+            <File>
+              <FileName>MSocket.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\src\User\MSocket.c</FilePath>
+            </File>
+            <File>
+              <FileName>Wifi.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\src\User\Wifi.c</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>
@@ -490,6 +520,26 @@
               <FileName>startup_stm32f40_41xxx.s</FileName>
               <FileType>2</FileType>
               <FilePath>..\src\CORE\startup_stm32f40_41xxx.s</FilePath>
+            </File>
+          </Files>
+        </Group>
+        <Group>
+          <GroupName>Wifi</GroupName>
+          <Files>
+            <File>
+              <FileName>M8266HostIf_STM32xx.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\src\M8266WIFI\M8266HostIf_STM32xx.c</FilePath>
+            </File>
+            <File>
+              <FileName>M8266WIFI_ops.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\src\M8266WIFI\M8266WIFI_ops.c</FilePath>
+            </File>
+            <File>
+              <FileName>M8266WIFIDrv_STM32F4xx.lib</FileName>
+              <FileType>4</FileType>
+              <FilePath>..\src\M8266WIFI\M8266WIFIDrv_STM32F4xx.lib</FilePath>
             </File>
           </Files>
         </Group>
