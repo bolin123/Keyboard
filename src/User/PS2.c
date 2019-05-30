@@ -8,7 +8,15 @@
 #define PS2_CLK_PIN 0x12
 #define PS2_DIO_PIN 0x11
 
+typedef struct
+{
+    uint8_t ctrlkey;
+    uint8_t reserve;
+    uint8_t normalkey[6];
+}PS2USBKey_t;
+
 static VTSQueueDef(uint8_t, valueBuff, 128);
+static PS2USBKey_t g_usbKey;
 
 static void halExtiInit(bool interrupt)
 {
@@ -138,12 +146,86 @@ static void ps2BitSend(uint8_t byte)
 	ps2RecvModeSet(true);
 }
 
+static bool updateUsbKey(bool set, uint8_t value)
+{
+    uint8_t i;
+
+    for(i = 0; i < 6; i++)
+    {
+        if(value == g_usbKey.normalkey[i])
+        {
+            if(set) //新增
+            {
+                return false; //已有，无需更新
+            }
+            else //删除
+            {
+                g_usbKey.normalkey[i] = 0;
+                return true;
+            }
+        }
+    }
+    
+    if(set)
+    {
+        for(i = 0; i < 6; i++)
+        {
+            if(g_usbKey.normalkey[i] == 0)
+            {
+                g_usbKey.normalkey[i] = value;
+                return true;
+            }
+        }
+    }
+
+    return 0;
+}
 
 static void usbKeyHandle(bool ctrlKey, bool pushed, uint8_t value)
 {
+    bool needUpdate = false;
     if(value != 0xff)
     {
-        printf("U:%02x %d [%d]\n", value, pushed, ctrlKey);
+        //printf("U:%02x %d [%d]\n", value, pushed, ctrlKey);
+        if(ctrlKey)
+        {
+            if(pushed)
+            {
+                if((g_usbKey.ctrlkey & (0x01 << value)) == 0)
+                {
+                    g_usbKey.ctrlkey |= (0x01 << value);
+                    needUpdate = true;
+                }
+            }
+            else
+            {
+                g_usbKey.ctrlkey &= ~(0x01 << value);
+                needUpdate = true;
+            }
+        }
+        else
+        {
+            if(pushed)
+            {
+                needUpdate = updateUsbKey(true, value);
+            }
+            else
+            {
+                needUpdate = updateUsbKey(false, value);
+            }
+        }
+
+        if(needUpdate)
+        {
+            printf("\r\n");
+            uint8_t *data = (uint8_t *)&g_usbKey;
+            for(uint8_t i = 0; i < 8; i++)
+            {
+                printf("%02x ", data[i]);
+            }
+            printf("\r\n");
+            // TODO: usb transfer function
+        }
     }
 }
 
@@ -199,7 +281,8 @@ static void keyValueHandle(void)
             gotF0 = true;
         }
         else
-        {
+        {
+
             ps2key = value;
             if(gotE0)
             {
