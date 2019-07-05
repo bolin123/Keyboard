@@ -17,7 +17,7 @@ int MSocketUdpDataSend(MSocket_t *socket, const char *ip, uint16_t port, uint8_t
     {
         do
         {
-            len += M8266WIFI_SPI_Send_Udp_Data(data, dlen, socket->socketId, (char *)ip, port, &status);
+            len += M8266WIFI_SPI_Send_Udp_Data(data + len, dlen - len, socket->socketId, (char *)ip, port, &status);
             if((status&0x00ff) >= 0x10)
 			{
 				return -1;
@@ -31,15 +31,34 @@ int MSocketDataSend(MSocket_t *socket, uint8_t *data, uint16_t dlen)
 {
 	uint16_t status;
 	uint16_t len = 0;
+	uint16_t count = 0;
 	if(socket != NULL)
 	{
 		do
 		{
-			len += M8266WIFI_SPI_Send_Data(data, dlen, socket->socketId, &status);
-			if((status&0x00ff) >= 0x10)
+			len += M8266WIFI_SPI_Send_Data(data + len, dlen - len, socket->socketId, &status);
+			uint16_t ret = status & 0x00ff;
+			if(ret >= 0x10)
 			{
-				return -1;
+				if(ret == 0x12)
+				{
+					M8266HostIf_delay_us(250);
+				}
+				else if(ret == 0x14 || ret == 0x15)
+				{
+					return -1;
+				}
+				else
+				{
+					M8266HostIf_delay_us(200);
+				}
 			}
+			
+			if(len >= dlen || count > 500)
+			{
+				break;
+			}
+			count++;
 		}
 		while(len < dlen);
 	}
